@@ -28,13 +28,13 @@ const App = () => {
   const [intervalID, setIntervalID] = useState(null);
 
   // Use sounds
-  const [background, { stop: stopBackground }] = useSound(
+  const [backgroundSound, { stop: stopBackgroundSound }] = useSound(
     "/sounds/background.mp3",
     { volume: 0.5, loop: true }
   );
-  const [correct] = useSound("/sounds/correct.mp3");
-  const [incorrect] = useSound("/sounds/incorrect.mp3");
-  const [ticking] = useSound("/sounds/ticking.mp3");
+  const [correctChoiceSound] = useSound("/sounds/correct.mp3");
+  const [incorrectChoiceSound] = useSound("/sounds/incorrect.mp3");
+  const [tickingSound] = useSound("/sounds/ticking.mp3");
 
   // Compare 2 selected cards:
   useEffect(() => {
@@ -51,12 +51,12 @@ const App = () => {
         setTimeout(() => resetTurn(), 1000);
       }
     }
-  }, [choiceOne, choiceTwo, correct, incorrect]);
+  }, [choiceOne, choiceTwo, correctChoiceSound, incorrectChoiceSound]);
 
   // Start the timer on component mount
   useEffect(() => {
     if (!startScreen) {
-      background();
+      backgroundSound();
 
       setIntervalID(
         setInterval(() => {
@@ -64,22 +64,22 @@ const App = () => {
         }, 1000)
       );
     }
-  }, [startScreen, background, stopBackground]);
+  }, [startScreen, backgroundSound, stopBackgroundSound]);
 
   // stop Timer if game is won
   useEffect(() => {
     if (matchesFound == 4) {
       clearInterval(intervalID);
-      stopBackground();
+      stopBackgroundSound();
     }
   }, [matchesFound]);
 
   // Play ticking sound when there are 10 seconds left
   useEffect(() => {
     if (timer <= 10) {
-      ticking();
+      tickingSound();
     }
-  }, [timer, ticking]);
+  }, [timer, tickingSound]);
 
   // Function to update the timer
   const updateTimer = () => {
@@ -89,7 +89,7 @@ const App = () => {
         setShowModal(true);
         setModalIsMatch(false);
         setUnsuccessfulGame(true);
-        stopBackground();
+        stopBackgroundSound();
       }
       return newTimer >= 0 ? newTimer : 0;
     });
@@ -108,15 +108,15 @@ const App = () => {
 
     // Check if it's a match
     if (choiceOne && choiceTwo && choiceOne.src === choiceTwo.src) {
-      setMatchesFound((prevMatches) => prevMatches + 1); // Increment matchesFound
+      setMatchesFound((prevMatches) => prevMatches + 1);
       setModalIsMatch(true);
       setShowModal(true);
-      correct();
+      correctChoiceSound();
     } else {
       setModalIsMatch(false);
       if (choiceOne && choiceTwo && choiceOne.src !== choiceTwo.src) {
         setShowModal(true);
-        incorrect();
+        incorrectChoiceSound();
       }
     }
   };
@@ -125,9 +125,9 @@ const App = () => {
   const toggleMute = () => {
     setIsMuted((prevMuted) => {
       if (prevMuted) {
-        background();
+        backgroundSound();
       } else {
-        stopBackground();
+        stopBackgroundSound();
       }
       return !prevMuted;
     });
@@ -137,7 +137,7 @@ const App = () => {
   const shuffleCards = () => {
     setTimer(30);
     setUnsuccessfulGame(false);
-    setMatchesFound(0); // Reset matchesFound
+    setMatchesFound(0);
     setChoiceOne(null);
     setChoiceTwo(null);
     setDisabled(false);
@@ -173,9 +173,11 @@ const App = () => {
           {matchesFound == 4 && <p>You did it!</p>} */}
           <img className="logo" src="/images/logo.png" alt="Logo" />
           <br></br>
-          <button className="start-button" onClick={startGame}>
-            Start
-          </button>
+          <div className="test-div">
+            <button className="start-button" onClick={startGame}>
+              Start
+            </button>
+          </div>
         </div>
       )}
 
@@ -211,7 +213,7 @@ const App = () => {
               isMatch={modalIsMatch}
               unsuccessfulGame={unsuccessfulGame}
               matchesFound={matchesFound}
-            ></Modal>
+            />
           )}
         </div>
       )}

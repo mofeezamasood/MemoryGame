@@ -2,7 +2,8 @@
 
 .App {
   max-width: 860px;
-  margin: 40px auto;
+  max-height: 100vh;
+  margin: 0 auto;
 }
 
 button {
@@ -64,7 +65,7 @@ button:hover {
   animation: slideInFromTop 1s ease-in-out;
 }
 
-.start-button {
+.test-div {
   animation: slideInFromBottom 1s ease-in-out;
 }
 
