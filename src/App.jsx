@@ -19,13 +19,13 @@ const App = () => {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const [timer, setTimer] = useState(100);
+  const [timer, setTimer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalIsMatch, setModalIsMatch] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [unsuccessfulGame, setUnsuccessfulGame] = useState(false);
   const [matchesFound, setMatchesFound] = useState(0);
-  const [timeInterval, setTimeInterval] = useState(null);
+  const [intervalID, setIntervalID] = useState(null);
 
   // Use sounds
   const [background, { stop: stopBackground }] = useSound(
@@ -35,6 +35,51 @@ const App = () => {
   const [correct] = useSound("/sounds/correct.mp3");
   const [incorrect] = useSound("/sounds/incorrect.mp3");
   const [ticking] = useSound("/sounds/ticking.mp3");
+
+  // Compare 2 selected cards:
+  useEffect(() => {
+    if (choiceOne && choiceTwo) {
+      setDisabled(true);
+      if (choiceOne.src === choiceTwo.src) {
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            card.src === choiceOne.src ? { ...card, matched: true } : card
+          )
+        );
+        resetTurn();
+      } else {
+        setTimeout(() => resetTurn(), 1000);
+      }
+    }
+  }, [choiceOne, choiceTwo, correct, incorrect]);
+
+  // Start the timer on component mount
+  useEffect(() => {
+    if (!startScreen) {
+      background();
+
+      setIntervalID(
+        setInterval(() => {
+          updateTimer();
+        }, 1000)
+      );
+    }
+  }, [startScreen, background, stopBackground]);
+
+  // stop Timer if game is won
+  useEffect(() => {
+    if (matchesFound == 4) {
+      clearInterval(intervalID);
+      stopBackground();
+    }
+  }, [matchesFound]);
+
+  // Play ticking sound when there are 10 seconds left
+  useEffect(() => {
+    if (timer <= 10) {
+      ticking();
+    }
+  }, [timer, ticking]);
 
   // Function to update the timer
   const updateTimer = () => {
@@ -106,50 +151,6 @@ const App = () => {
     setCards(shuffledCards);
   };
 
-  // Compare 2 selected cards:
-  useEffect(() => {
-    if (choiceOne && choiceTwo) {
-      setDisabled(true);
-      if (choiceOne.src === choiceTwo.src) {
-        setCards((prevCards) =>
-          prevCards.map((card) =>
-            card.src === choiceOne.src ? { ...card, matched: true } : card
-          )
-        );
-        resetTurn();
-      } else {
-        setTimeout(() => resetTurn(), 1000);
-      }
-    }
-  }, [choiceOne, choiceTwo, correct, incorrect]);
-
-  // Start the timer on component mount
-  useEffect(() => {
-    if (!startScreen) {
-      background();
-
-      setTimeInterval(
-        setInterval(() => {
-          updateTimer();
-        }, 1000)
-      );
-    }
-  }, [startScreen, background, stopBackground]);
-
-  useEffect(() => {
-    if (matchesFound == 4) {
-      clearInterval(timeInterval);
-      stopBackground();
-    }
-  }, [matchesFound]);
-
-  // Play ticking sound when there are 10 seconds left
-  useEffect(() => {
-    if (timer <= 10) {
-      ticking();
-    }
-  }, [timer, ticking]);
-
   // Function to close the modal
   const closeModal = () => {
     setShowModal(false);
@@ -185,7 +186,7 @@ const App = () => {
             onClick={toggleMute}
             style={{ position: "absolute", top: 10, right: 10 }}
           >
-            {isMuted ? "Unmute" : "Mute"}
+            {isMuted ? "🔊" : "🔇"}
           </div>
           <div className="timer">Time Left: {timer} seconds</div>
           <h1>Memory Game</h1>

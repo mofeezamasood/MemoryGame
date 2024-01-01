@@ -27,7 +27,7 @@
   width: 100%;
   padding-top: 30%;
   padding-bottom: 30%;
-  background-color: rgb(5, 48, 73);
+  background-color: rgb(26, 154, 228);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +41,7 @@
 }
 
 .text {
-  color: rgb(247, 247, 143);
+  color: rgb(255, 255, 0);
   font-size: 70px;
   font-weight: bold;
   text-align: center;
