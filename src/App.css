@@ -1,0 +1,110 @@
+/*App.css*/
+
+.App {
+  max-width: 860px;
+  margin: 40px auto;
+}
+
+button {
+  font-size: 1em;
+  background: none;
+  border: 2px solid #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c23866;
+  color: #fff;
+}
+
+.card-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.mute-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border: none;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.start-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo {
+  display: block;
+  width: 15%;
+  border-radius: 6px;
+  animation: slideInFromTop 1s ease-in-out;
+}
+
+.start-button {
+  animation: slideInFromBottom 1s ease-in-out;
+}
+
+.start-button:hover {
+  animation: bounce 0.5s infinite;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards; /* Keep the final state of the bounce animation after it ends */
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.resolve-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.resolve-container h2 {
+  margin-bottom: 20px;
+}

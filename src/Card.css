@@ -1,0 +1,48 @@
+/* Card.css */
+
+.card {
+  position: relative;
+  cursor: pointer;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.card .front {
+  position: absolute;
+  transform: rotateY(90deg);
+  transition: all ease-in 0.2s;
+}
+
+.flipped .front {
+  transform: rotateY(0deg);
+  transition-delay: 0.2s;
+}
+
+.card .back {
+  position: relative;
+  width: 100%;
+  padding-top: 30%;
+  padding-bottom: 30%;
+  background-color: rgb(5, 48, 73);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all ease-in 0.2s;
+  transition-delay: 0.2s;
+}
+
+.flipped .back {
+  transform: rotateY(90deg);
+  transition-delay: 0s;
+}
+
+.text {
+  color: rgb(247, 247, 143);
+  font-size: 70px;
+  font-weight: bold;
+  text-align: center;
+}
