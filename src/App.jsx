@@ -198,6 +198,7 @@ const App = () => {
           <div className="mute-button" onClick={toggleMute}>
             {isMuted ? "🔊" : "🔇"}
           </div>
+          <br></br>
           <div className="timer">Time Left: {timer} seconds</div>
           <h1>Memory Game</h1>
           <button onClick={shuffleCards}>New Game</button>
