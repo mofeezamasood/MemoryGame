@@ -15,16 +15,21 @@ const cardImages = [
 
 const App = () => {
   const [startScreen, setStartScreen] = useState(true);
+  const [gameScreen, setGameScreen] = useState(false);
+  const [thirdScreen, setThirdScreen] = useState(false);
+  const [gameLost, setGameLost] = useState(false);
+  const [matchesFound, setMatchesFound] = useState(0);
+
   const [cards, setCards] = useState([]);
+
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
+
   const [disabled, setDisabled] = useState(false);
   const [timer, setTimer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalIsMatch, setModalIsMatch] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [unsuccessfulGame, setUnsuccessfulGame] = useState(false);
-  const [matchesFound, setMatchesFound] = useState(0);
   const [intervalID, setIntervalID] = useState(null);
 
   // Use sounds
@@ -53,26 +58,21 @@ const App = () => {
     }
   }, [choiceOne, choiceTwo, correctChoiceSound, incorrectChoiceSound]);
 
-  // Start the timer on component mount
-  useEffect(() => {
-    if (!startScreen) {
-      backgroundSound();
-
-      setIntervalID(
-        setInterval(() => {
-          updateTimer();
-        }, 1000)
-      );
-    }
-  }, [startScreen, backgroundSound, stopBackgroundSound]);
-
   // stop Timer if game is won
   useEffect(() => {
-    if (matchesFound == 4) {
+    if (matchesFound === 4) {
       clearInterval(intervalID);
       stopBackgroundSound();
+      setShowModal(false);
     }
   }, [matchesFound]);
+
+  useEffect(() => {
+    if (gameLost || matchesFound === 4) {
+      setGameScreen(false);
+      setThirdScreen(true);
+    }
+  });
 
   // Play ticking sound when there are 10 seconds left
   useEffect(() => {
@@ -86,9 +86,7 @@ const App = () => {
     setTimer((prevTimer) => {
       const newTimer = prevTimer - 1;
       if (newTimer <= 0) {
-        setShowModal(true);
-        setModalIsMatch(false);
-        setUnsuccessfulGame(true);
+        setGameLost(true);
         stopBackgroundSound();
       }
       return newTimer >= 0 ? newTimer : 0;
@@ -124,10 +122,10 @@ const App = () => {
   // Toggle mute without restarting the game
   const toggleMute = () => {
     setIsMuted((prevMuted) => {
-      if (prevMuted) {
-        backgroundSound();
-      } else {
+      if (!prevMuted) {
         stopBackgroundSound();
+      } else {
+        backgroundSound();
       }
       return !prevMuted;
     });
@@ -136,8 +134,8 @@ const App = () => {
   // Shuffle cards:
   const shuffleCards = () => {
     setTimer(30);
-    setUnsuccessfulGame(false);
     setMatchesFound(0);
+
     setChoiceOne(null);
     setChoiceTwo(null);
     setDisabled(false);
@@ -154,40 +152,50 @@ const App = () => {
   // Function to close the modal
   const closeModal = () => {
     setShowModal(false);
-    setUnsuccessfulGame(false);
-    if (unsuccessfulGame || matchesFound == 4) {
-      setStartScreen(true);
-    }
   };
 
   const startGame = () => {
     setStartScreen(false);
+    setGameScreen(true);
+    setThirdScreen(false);
+    setGameLost(false);
+    setMatchesFound(0);
+
+    clearInterval(intervalID);
+    stopBackgroundSound();
+
     shuffleCards();
+
+    setTimer(30);
+    backgroundSound();
+    setIsMuted(false);
+
+    setIntervalID(
+      setInterval(() => {
+        updateTimer();
+      }, 1000)
+    );
   };
 
   return (
-    <div className={`App ${startScreen ? "start-screen" : "game-screen"}`}>
+    <div>
       {startScreen && (
-        <div className="start-container">
-          {/* {unsuccessfulGame && <p>Oops! You didn't find them all</p>}
-          {matchesFound == 4 && <p>You did it!</p>} */}
-          <img className="logo" src="/images/logo.png" alt="Logo" />
+        <div className="startscreen-container">
+          <img className="logo" src="/images/logo.png" />
           <br></br>
-          <div className="test-div">
-            <button className="start-button" onClick={startGame}>
-              Start
-            </button>
+          <div className="animation-one">
+            <div className="animation-two">
+              <button className="start-button" onClick={startGame}>
+                Start
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {!startScreen && (
-        <div className="App">
-          <div
-            className="mute-button"
-            onClick={toggleMute}
-            style={{ position: "absolute", top: 10, right: 10 }}
-          >
+      {gameScreen && (
+        <div className="gamescreen-container">
+          <div className="mute-button" onClick={toggleMute}>
             {isMuted ? "🔊" : "🔇"}
           </div>
           <div className="timer">Time Left: {timer} seconds</div>
@@ -207,13 +215,35 @@ const App = () => {
               />
             ))}
           </div>
+
           {showModal && (
             <Modal
               onClose={closeModal}
               isMatch={modalIsMatch}
-              unsuccessfulGame={unsuccessfulGame}
+              gameLost={gameLost}
               matchesFound={matchesFound}
             />
+          )}
+        </div>
+      )}
+
+      {thirdScreen && (
+        <div className="thirdscreen-container">
+          {gameLost && (
+            <div>
+              <p>Oops! You didn't find them all.</p>
+              <button className="animation-two" onClick={startGame}>
+                Play Again
+              </button>
+            </div>
+          )}
+          {matchesFound === 4 && (
+            <div>
+              <p>You did it</p>
+              <button className="animation-two" onClick={startGame}>
+                Play Again
+              </button>
+            </div>
           )}
         </div>
       )}

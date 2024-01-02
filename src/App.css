@@ -1,6 +1,6 @@
 /*App.css*/
 
-.App {
+.gamescreen-container {
   max-width: 860px;
   max-height: 100vh;
   margin: 0 auto;
@@ -22,6 +22,15 @@ button:hover {
   color: #fff;
 }
 
+.thirdscreen-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
 .card-grid {
   margin-top: 40px;
   display: grid;
@@ -30,15 +39,15 @@ button:hover {
 }
 
 .mute-button {
-  position: absolute;
   top: 10px;
   right: 10px;
   border: none;
   cursor: pointer;
+  padding-left: 120%;
   font-size: 2em;
 }
 
-.start-container {
+.startscreen-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,14 +74,14 @@ button:hover {
   animation: slideInFromTop 1s ease-in-out;
 }
 
-.test-div {
+.animation-one {
   animation: slideInFromBottom 1s ease-in-out;
 }
 
-.start-button:hover {
+.animation-two:hover {
   animation: bounce 0.5s infinite;
   animation-timing-function: ease-in-out;
-  animation-fill-mode: forwards; /* Keep the final state of the bounce animation after it ends */
+  animation-fill-mode: forwards;
 }
 
 @keyframes bounce {

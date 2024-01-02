@@ -3,19 +3,13 @@
 import React from "react";
 import "./Modal.css";
 
-const Modal = ({ onClose, isMatch, unsuccessfulGame, matchesFound }) => {
+const Modal = ({ onClose, isMatch, gameLost, matchesFound }) => {
   let modalMessage;
 
-  if (unsuccessfulGame) {
-    modalMessage = "Oops! You didn't find them all";
-  } else {
-    if (matchesFound == 4) {
-      modalMessage = "You did it!";
-    } else {
-      modalMessage = isMatch
-        ? "Nice! It's a match"
-        : "Sorry! This is not a match";
-    }
+  if (!gameLost && matchesFound < 4) {
+    modalMessage = isMatch
+      ? "Nice! It's a match"
+      : "Sorry! This is not a match";
   }
 
   return (
@@ -25,12 +19,7 @@ const Modal = ({ onClose, isMatch, unsuccessfulGame, matchesFound }) => {
         <div className="modal-body">
           <h4>{modalMessage}</h4>
         </div>
-        <div className="modal-footer">
-          {unsuccessfulGame && <button onClick={onClose}>Try Again</button>}
-          {!unsuccessfulGame && matchesFound === 4 && (
-            <button onClick={onClose}>Play Again</button>
-          )}
-        </div>
+        <div className="modal-footer"></div>
       </div>
     </div>
   );
