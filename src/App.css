@@ -39,11 +39,11 @@ button:hover {
 }
 
 .mute-button {
+  position: relative;
   top: 10px;
   right: 10px;
   border: none;
   cursor: pointer;
-  padding-left: 120%;
   font-size: 2em;
 }
 
