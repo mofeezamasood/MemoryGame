@@ -1,6 +1,6 @@
 ## Description
 
-This is the README file for a [Memory Game](https://memory-game-mofeeza-masoods-projects.vercel.app/). The website is built using ReactJS, HTML, CSS, and Bootstrap to create a responsive and visually appealing multi-page layout.
+This is the README file for a [Memory Game](https://memory-game-mofeeza-masoods-projects.vercel.app/). The website is built using ReactJS, HTML, CSS, and Bootstrap to create a responsive and visually appealing layout.
 
 ## Features
 
